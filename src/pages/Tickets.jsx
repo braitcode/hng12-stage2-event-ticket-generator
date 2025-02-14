@@ -5,9 +5,11 @@ import ticket from "../assets/images/newticket.png"
 import { NavLink } from 'react-router-dom'
 import barcode from "../assets/images/Bar Code.png"
 import '../components/styles/styles.css'
+import { useRef } from "react"
 
 const Tickets = () => {
   const [ticketData, setTicketData] = useState(null);
+  const ticketRef = useRef(null);
 
     // Load stored ticket & attendee data
    useEffect(() => {
@@ -32,41 +34,40 @@ const Tickets = () => {
 }, []);
 
     // Download Ticket as Image
-    const handleDownload = () => {
-      const ticketElement = document.querySelector("#ticketContainer");
-    
-      if (!ticketElement) {
+    const handleDownload = async (format = "png") => {
+      if (!ticketRef.current) {
         console.error("Ticket container not found!");
         return;
       }
-    
-      setTimeout(() => {
-        html2canvas(ticketElement, {
-          scale: 3, // Higher resolution
-          useCORS: true, // Ensures external images are loaded
-          backgroundColor: null, // Transparent background
-          logging: true, // Debugging
-          foreignObjectRendering: true, // Experimental: Fixes image issues
-        })
-          .then((canvas) => {
-            const imgData = canvas.toDataURL("image/png");
-            const pdf = new jsPDF({
-              orientation: "portrait",
-              unit: "mm",
-              format: [80, 120]  // Ticket-sized PDF
+  
+      try {
+        const canvas = await html2canvas(ticketRef.current, {
+          scale: 3,
+          useCORS: true,
+          backgroundColor: null
+        });
+  
+        const imgData = canvas.toDataURL("image/png");
+  
+        if (format === "png") {
+          // Download as PNG
+          const link = document.createElement("a");
+          link.href = imgData;
+          link.download = "ticket.png";
+          link.click();
+        } else if (format === "pdf") {
+          // Download as PDF
+          const pdf = new jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: [80, 120]  // Ticket-sized PDF
           });
-          pdf.addImage(imgData, "PNG", 5, 5, 70, 100); // Adjust size/position as needed
-        pdf.save("ticket.pdf");
-            console.log("Canvas generated successfully");
-            const link = document.createElement("a");
-            link.download = "ticket.png";
-            link.href = canvas.toDataURL("image/jpg");
-            link.click();
-          })
-          .catch((error) => {
-            console.error("Error capturing ticket:", error);
-          });
-      }, 500); // Delay ensures everything is fully loaded
+          pdf.addImage(imgData, "PNG", 5, 5, 70, 100);
+          pdf.save("ticket.pdf");
+        }
+      } catch (error) {
+        console.error("Error capturing ticket:", error);
+      }
     };
 
   if (!ticketData) return <p className="text-white text-center">Loading...</p>;
@@ -79,16 +80,16 @@ const Tickets = () => {
               <p className='text-white'>Ready</p>
               <p className='text-white'>Step 3/3</p>
             </span>
-            <span>
-              <p className='bg-[#197686] w-full h-[3px]'></p>
-            </span>
+            <div className="w-full bg-[#0E464F] h-[4px] rounded-full overflow-hidden">
+                            <div className="bg-[#24A0B5] h-full w-[100%]"></div>
+                        </div>
           </div>
           <div className="w-full h-[900.85px] flex flex-col justify-between items-center">
             <span className='h-[81px] flex flex-col justify-between items-center'>
               <p className='text-center lg:text-[32px] text-[20px] text-white'>Your Ticket Is Booked!</p>
               <p className='text-white lg:text-[16px] text-[14px] text-center'>Check your email for a copy or you can <b>download</b></p>
             </span>
-            <div id="ticketContainer" className="relative w-[300px] h-[600px] bg-cover bg-no-repeat bg-center p-5"
+            <div ref={ticketRef} id="ticketContainer" className="relative w-[300px] h-[600px] bg-cover bg-no-repeat bg-center p-5"
               style={{ backgroundImage: `url('${ticket}')` }}>
 
               <div className="w-[260px] h-[446px] border border-[#197686] rounded-2xl flex flex-col items-center justify-center gap-[20px]">

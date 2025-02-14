@@ -10,6 +10,8 @@ const Attendee = () => {
     const [profilePic, setProfilePic] = useState(null);
     const [error, setError] = useState('');
     const [showModal, setShowModal] = useState(false);
+    const [uploading, setUploading] = useState(false);
+
 
     useEffect(() => {
         const savedName = localStorage.getItem("attendeeName");
@@ -21,35 +23,46 @@ const Attendee = () => {
         if (savedProfilePic) setProfilePic(savedProfilePic);
     }, []);
 
-    const handleFileUpload = (event) => {
+    const handleFileUpload = async (event) => {
         const file = event.target.files[0];
         if (file) {
+            setUploading(true); // Show loading state
             const formData = new FormData();
             formData.append("file", file);
-            formData.append("upload_preset", "your_cloudinary_preset"); // Replace with your Cloudinary upload preset
-    
-            fetch("https://api.cloudinary.com/v1_1/dww4lgcy9/image/upload", { // Replace with your Cloudinary name
-                method: "POST",
-                body: formData,
-            })
-            .then(response => response.json())
-            .then(data => {
+            formData.append("upload_preset", "your_cloudinary_preset"); // Replace with actual preset
+
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setProfilePic(reader.result);
+                localStorage.setItem("attendeeProfilePic", reader.result);
+            };
+            reader.readAsDataURL(file);
+
+            try {
+                const response = await fetch("https://api.cloudinary.com/v1_1/dww4lgcy9/image/upload", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                const data = await response.json();
                 if (data.secure_url) {
                     setProfilePic(data.secure_url);
                     localStorage.setItem("attendeeProfilePic", data.secure_url);
                 }
-            })
-            .catch(error => console.error("Error uploading to Cloudinary:", error));
+            } catch (error) {
+                console.error("Error uploading to Cloudinary:", error);
+            } finally {
+                setUploading(false); // Remove loading state
+            }
         }
     };
-    
+
     // Handle Cloudinary URL input
     const handleCloudinaryURL = (event) => {
         const url = event.target.value;
         setProfilePic(url);
         localStorage.setItem("attendeeProfilePic", url);
     };
-    
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -95,19 +108,22 @@ const Attendee = () => {
                         <p className='text-white'>Attendee Details</p>
                         <p className='text-white'>Step 2/3</p>
                     </span>
-                    <span>
-                        <p className='bg-[#197686] w-full h-[3px]'></p>
-                    </span>
+                    <div className="w-full bg-[#0E464F] h-[4px] rounded-full overflow-hidden">
+                        <div className="bg-[#24A0B5] h-full w-[66%]"></div>
+                    </div>
                 </div>
                 <div className="bg-[#08252B] w-full h-auto flex flex-col items-center justify-center gap-8 rounded-xl border border-[#2BA4B9] p-6">
-                    <div className="lg:w-[556px] w-[90%] border border-[#07373F] text-white flex flex-col justify-center items-center gap-4 rounded-xl p-4">
+                    <div className="lg:w-[556px] w-[95%] border border-[#07373F] text-white flex flex-col justify-center items-center gap-4 rounded-xl p-4">
                         <p className="text-white">Upload Profile Picture</p>
                         <label className="cursor-pointer relative group">
-                            <div className="w-[210px] h-[210px] bg-[#0E464F] rounded-2xl flex flex-col justify-center items-center gap-4 relative">
-                                {profilePic ? (
+                            <div className="lg:w-[210px] lg:h-[210px] h-[200px] w-[200px] bg-[#0E464F] rounded-2xl flex flex-col justify-center items-center gap-4 relative">
+                                {uploading ? (
+                                    <p className="text-white">Uploading...</p>
+                                ) : profilePic ? (
                                     <>
-                                        <img src={profilePic} alt="Profile" className="w-[200px] h-[200px] object-cover rounded-lg" />
-                                        <div className="absolute inset-0 flex flex-col justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <img src={profilePic} alt="Profile" className="lg:w-[200px] lg:h-[200px] h-[190px] w-[190px] object-cover rounded-lg" />
+                                        {/* Show Cloud & Upload Text on Hover */}
+                                        <div className="absolute inset-0 flex flex-col justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity rounded-lg">
                                             <img src={cloud} alt="Upload" />
                                             <p className="text-white text-center">Drag & Drop or Click to Upload</p>
                                         </div>
@@ -122,28 +138,28 @@ const Attendee = () => {
                             <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
                         </label>
 
-                        <input 
-    type="text" 
-    placeholder="Paste Cloudinary URL here" 
-    value={profilePic || ""} 
-    onChange={handleCloudinaryURL} 
-    className="w-full p-2 mt-2 border border-[#07373F] rounded-lg text-white bg-transparent"
-/>
+                        <input
+                            type="text"
+                            placeholder="Paste Cloudinary URL here"
+                            value={profilePic || ""}
+                            onChange={handleCloudinaryURL}
+                            className="w-full p-2 mt-2 border border-[#07373F] rounded-lg text-white bg-transparent"
+                        />
                     </div>
-                    <form className='flex flex-col gap-8 w-[556px]' onSubmit={handleSubmit}>
-                        <div className="flex flex-col gap-2">
+                    <form className='flex flex-col justify-center items-center lg:gap-8 gap-4 lg:w-[556px]' onSubmit={handleSubmit}>
+                        <div className="lg:w-full w-[90%] flex flex-col gap-2">
                             <label className='text-white'>Enter your name</label>
-                            <input type="text" value={name} onChange={(e) => setName(e.target.value)} className='w-full text-white h-[48px] p-2 border border-[#07373F] rounded-lg' required />
+                            <input type="text" value={name} onChange={(e) => setName(e.target.value)} className='lg:w-full text-white h-[48px] p-2 border border-[#07373F] rounded-lg' required />
                         </div>
-                        <div className="flex flex-col gap-2">
+                        <div className="lg:w-full w-[90%] flex flex-col gap-2">
                             <label className='text-white'>Enter your email*</label>
                             <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder='hello@avioflagos.io' className='w-full h-[48px] p-2 border border-[#07373F] text-white rounded-lg' required />
                         </div>
-                        <div className="flex flex-col gap-2">
+                        <div className="lg:w-full w-[90%] flex flex-col gap-2">
                             <label className='text-white'>Special Request</label>
                             <textarea placeholder='' className='w-full h-[127px] p-2 border border-[#07373F] text-white rounded-lg' />
                         </div>
-                        <div className="flex justify-between">
+                        <div className="lg:w-[556px] lg:h-[48px] bg-transparent lg:bg-[#041E23] rounded-2xl flex flex-col-reverse md:flex-row justify-center gap-4">
                             <NavLink to='/'>
                                 <button className='border border-[#2BA4B9] w-[270px] h-[48px] rounded-lg text-[#2BA4B9] cursor-pointer'>Back</button>
                             </NavLink>

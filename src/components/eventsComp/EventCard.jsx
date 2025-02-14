@@ -38,15 +38,15 @@ const EventCard = () => {
             alert("Please select a ticket first.");
             return;
         }
-    
+
         const priceInKobo = parseInt(selectedTicket.price.replace(/[^0-9]/g, ""), 10) * 100; // Converts "$50" → 5000
-        const email = localStorage.getItem("attendeeEmail") || "brightjohn489@gmail.com"; 
-    
+        const email = localStorage.getItem("attendeeEmail") || "brightjohn489@gmail.com";
+
         if (!email) {
             alert("A valid email is required for payment.");
             return;
         }
-    
+
         const paystack = new PaystackPop();
         paystack.newTransaction({
             key: "pk_test_f9641f49d62914edbfdd6e3973e986a08d01c9cc",
@@ -71,32 +71,32 @@ const EventCard = () => {
             alert("Please select a ticket first.");
             return;
         }
-    
+
         const stripe = await stripePromise;
-        
+
         // Use real Stripe Price IDs
         const stripePriceIds = {
             "VIP": "price_1QsL7sPDSkXjoayWQDiEhhbY",   // Replace with actual Price ID for VIP ticket
             "VVIP": "price_1QsL9lPDSkXjoayW2keVfvJa"   // Replace with actual Price ID for VVIP ticket
         };
-    
+
         const priceId = stripePriceIds[selectedTicket.type]; // Get corresponding price ID
-    
+
         if (!priceId) {
             alert("Invalid ticket selection.");
             return;
         }
-    
+
         const { error } = await stripe.redirectToCheckout({
             lineItems: [{ price: priceId, quantity: ticketQuantity }],
             mode: "payment",
             successUrl: "http://localhost:5173/ticket",
             cancelUrl: "http://localhost:5173/"
         });
-    
+
         if (error) console.error("Stripe Checkout Error:", error);
     };
-    
+
 
     // Handle quantity selection
     const handleQuantityChange = (event) => {
@@ -107,7 +107,7 @@ const EventCard = () => {
     return (
         <>
 
-{showPaymentModal && (
+            {showPaymentModal && (
                 <div className="fixed inset-0 flex justify-center items-center">
                     <div className="bg-[#08252B] border border-[#2BA4B9] p-6 rounded-lg shadow-lg w-[400px] text-center">
                         <h2 className="text-white text-lg font-bold">Select a Payment Method</h2>
@@ -116,7 +116,7 @@ const EventCard = () => {
                             <button onClick={handlePaystackPayment} className="bg-[#08252B] border border-[#2BA4B9] text-white py-2 rounded-lg cursor-pointer">Pay with Paystack</button>
                             {/* <button className="bg-[#08252B] border border-[#2BA4B9] text-white py-2 rounded-lg cursor-pointer">Pay with Flutterwave</button> */}
                         </div>
-                        <button 
+                        <button
                             className="mt-4 text-white underline cursor-pointer"
                             onClick={() => setShowPaymentModal(false)}
                         >Cancel</button>
@@ -130,9 +130,9 @@ const EventCard = () => {
                             <p className='text-white'>Ticket Selection</p>
                             <p className='text-white'>Step 1/3</p>
                         </span>
-                        <span>
-                            <p className='bg-[#197686] w-full h-[3px]'></p>
-                        </span>
+                        <div className="w-full bg-[#0E464F] h-[4px] rounded-full overflow-hidden">
+                            <div className="bg-[#24A0B5] h-full w-[33%]"></div>
+                        </div>
                     </div>
                     <div className="bg-[#08252B] w-full lg:h-[726px] h-[1000px] flex flex-col items-center justify-center gap-6 rounded-xl border border-[#2BA4B9]">
                         <div className="lg:w-[556px] w-[90%] h-[200px] border border-[#07373F] text-white flex flex-col justify-center items-center gap-4 rounded-xl">
@@ -145,10 +145,9 @@ const EventCard = () => {
                             <p className='text-white h-[24px]'>Select Ticket Type:</p>
                             <div className="border border-[#07373F] lg:h-[186px] h-[410px] lg:w-[556px] w-[287px] rounded-xl flex justify-center items-center p-4">
                                 <div className="h-auto w-[524px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    <div className={`lg:w-[158px] w-[255px] h-[110px] p-2 rounded-xl cursor-pointer ${
-                                        selectedTicket?.type === "Regular" ? "bg-[#197686]" : "border border-[#07373F]"
-                                    }`}
-                                    onClick={() => handleTicketSelection("Regular", "Free")}>
+                                    <div className={`lg:w-[158px] w-[255px] h-[110px] p-2 rounded-xl cursor-pointer ${selectedTicket?.type === "Regular" ? "bg-[#197686]" : "border border-[#07373F]"
+                                        }`}
+                                        onClick={() => handleTicketSelection("Regular", "Free")}>
                                         <p className=" text-white font-semibold text-[24px]">
                                             Free
                                         </p>
@@ -157,11 +156,10 @@ const EventCard = () => {
                                             <p className="text-white text-[14px]">20/52</p>
                                         </span>
                                     </div>
-                                    <div className={`lg:w-[158px] w-[255px] h-[110px] p-2 rounded-xl cursor-pointer ${
-                                        selectedTicket?.type === "VIP" ? "bg-[#197686]" : "border border-[#07373F]"
-                                    }`}
-                                    onClick={() => handleTicketSelection("VIP", "$50")}
-                                >
+                                    <div className={`lg:w-[158px] w-[255px] h-[110px] p-2 rounded-xl cursor-pointer ${selectedTicket?.type === "VIP" ? "bg-[#197686]" : "border border-[#07373F]"
+                                        }`}
+                                        onClick={() => handleTicketSelection("VIP", "$50")}
+                                    >
                                         <p className=" text-white font-semibold text-[24px]">
                                             $50
                                         </p>
@@ -171,11 +169,10 @@ const EventCard = () => {
                                         </span>
 
                                     </div>
-                                    <div className={`lg:w-[158px] w-[255px] h-[110px] p-2 rounded-xl cursor-pointer lg:col-span-1 md:col-span-2 ${
-                                        selectedTicket?.type === "VVIP" ? "bg-[#197686]" : "border border-[#07373F]"
-                                    }`}
-                                    onClick={() => handleTicketSelection("VVIP", "$150")}
-                                >
+                                    <div className={`lg:w-[158px] w-[255px] h-[110px] p-2 rounded-xl cursor-pointer lg:col-span-1 md:col-span-2 ${selectedTicket?.type === "VVIP" ? "bg-[#197686]" : "border border-[#07373F]"
+                                        }`}
+                                        onClick={() => handleTicketSelection("VVIP", "$150")}
+                                    >
                                         <p className="text-white font-semibold text-[24px]">
                                             $150
                                         </p>
@@ -188,16 +185,16 @@ const EventCard = () => {
                             </div>
                         </div>
                         <div className="lg:w-[556px] w-[90%] flex flex-col">
-                        <p className="text-white">Number of Tickets:</p>
-                        <input
-                            type="number"
-                            value={ticketQuantity}
-                            min="1"
-                            max="10"
-                            onChange={handleQuantityChange}
-                            className="w-full h-[48px] p-2 border border-[#07373F] rounded-lg text-white bg-transparent"
-                        />
-                    </div>
+                            <p className="text-white">Number of Tickets:</p>
+                            <input
+                                type="number"
+                                value={ticketQuantity}
+                                min="1"
+                                max="10"
+                                onChange={handleQuantityChange}
+                                className="w-full h-[48px] p-2 border border-[#07373F] rounded-lg text-white bg-transparent"
+                            />
+                        </div>
                         <div className=" lg:w-[556px] lg:h-[48px] bg-transparent lg:bg-[#041E23] rounded-2xl flex flex-col-reverse md:flex-row justify-center gap-4">
                             <button className='border border-[#2BA4B9] lg:w-[214px] w-[287px] h-[48px] rounded-lg text-[#2BA4B9] cursor-pointer'>Cancel</button>
                             <NavLink to='/attendee'>

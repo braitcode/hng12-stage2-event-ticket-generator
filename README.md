@@ -13,5 +13,6 @@ This is a Conference Ticket Generator web application allowing users to book eve
 - Users have a choice of making payment through the payment gateways provided; Paystack (for African users) and Stripe (for international users).
 - Users can download their tickets either as an image or a pdf file
 
+---
 
 ## coded by braitcode ##

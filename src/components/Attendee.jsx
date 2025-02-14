@@ -18,9 +18,9 @@ const Attendee = () => {
         const savedEmail = localStorage.getItem("attendeeEmail");
         const savedProfilePic = localStorage.getItem("attendeeProfilePic");
 
-        if (savedName) setName(savedName);
-        if (savedEmail) setEmail(savedEmail);
-        if (savedProfilePic) setProfilePic(savedProfilePic);
+        if (savedName) setName("");
+        if (savedEmail) setEmail("");
+        if (savedProfilePic) setProfilePic(null);
     }, []);
 
     const handleFileUpload = async (event) => {
@@ -73,11 +73,22 @@ const Attendee = () => {
         }
         setError('');
         setShowModal(false);
+
+        // Retrieve existing tickets or create an empty array
+    const existingTickets = JSON.parse(localStorage.getItem("generatedTickets")) || [];
+    const newTicket = {
+        id: new Date().getTime(), // Unique ID
+        name,
+        email,
+        profilePic,
+    };
+    existingTickets.push(newTicket);
+    localStorage.setItem("generatedTickets", JSON.stringify(existingTickets));
         localStorage.setItem("attendeeName", name);
         localStorage.setItem("attendeeEmail", email);
         localStorage.setItem("attendeeProfilePic", profilePic);
         sendTicketByEmail();
-        navigate("/ticket");
+        navigate("/generated");
     };
 
     const sendTicketByEmail = () => {
@@ -93,7 +104,7 @@ const Attendee = () => {
     };
 
     return (
-        <div className="w-full h-auto bg-[#052F35] flex justify-center items-center py-10">
+        <div className="w-full h-auto  flex justify-center items-center py-10">
             {showModal && (
                 <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-60 bg-transparent">
                     <div className="bg-[#08252B] border border-[#2BA4B9] p-6 rounded-lg shadow-lg">
@@ -102,7 +113,7 @@ const Attendee = () => {
                     </div>
                 </div>
             )}
-            <div className="lg:w-[45%] w-[90%] border border-[#197686] rounded-3xl p-8 flex flex-col gap-6">
+            <div className="xl:w-[45%] lg:w-[70%] w-[90%] border border-[#197686] rounded-3xl p-8 flex flex-col gap-6">
                 <div className="flex flex-col gap-4">
                     <span className='flex justify-between'>
                         <p className='text-white'>Attendee Details</p>
@@ -141,10 +152,17 @@ const Attendee = () => {
                         <input
                             type="text"
                             placeholder="Paste Cloudinary URL here"
-                            value={profilePic || ""}
+                            value={profilePic?.startsWith("http") ? profilePic : ""} // Only show Cloudinary URL
                             onChange={handleCloudinaryURL}
                             className="w-full p-2 mt-2 border border-[#07373F] rounded-lg text-white bg-transparent"
                         />
+                        {/* <input
+                            type="text"
+                            placeholder="Paste Cloudinary URL here"
+                            value={profilePic || ""}
+                            onChange={handleCloudinaryURL}
+                            className="w-full p-2 mt-2 border border-[#07373F] rounded-lg text-white bg-transparent"
+                        /> */}
                     </div>
                     <form className='flex flex-col justify-center items-center lg:gap-8 gap-4 lg:w-[556px]' onSubmit={handleSubmit}>
                         <div className="lg:w-full w-[90%] flex flex-col gap-2">
@@ -163,7 +181,11 @@ const Attendee = () => {
                             <NavLink to='/'>
                                 <button className='border border-[#2BA4B9] w-[270px] h-[48px] rounded-lg text-[#2BA4B9] cursor-pointer'>Back</button>
                             </NavLink>
+
+                            {/* <NavLink to='/generated'> */}
+
                             <button type='submit' className='w-[270px] h-[48px] bg-[#2BA4B9] rounded-lg text-white cursor-pointer'>Get My Ticket</button>
+                            {/* </NavLink> */}
                         </div>
                     </form>
                 </div>

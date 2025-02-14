@@ -1,5 +1,6 @@
 import React from 'react';
 import { writeup } from '../db/data';
+import { Link } from 'react-router-dom';
 
 const WriteUp = () => {
     return (
@@ -92,9 +93,17 @@ const WriteUp = () => {
                 </div>
                 <div className="w-full flex justify-center ">
                     <div className="lg:w-[558px] w-[100%] h-[80px] flex justify-center items-center lg:gap-[32px] gap-[20px] border border-[#0E464F] rounded-xl">
+                        <Link to='https://www.figma.com/design/stTzQB1vH3hMa2ZNeIPs0U/Event-Ticket-Booking-UI-%E2%80%93-Open-Source-Practice-Project-%F0%9F%8E%9F%EF%B8%8F-(Community)?node-id=2-142&t=RNCVxuNNV2oci1oz-0'
+                        target='_blank'
+                        >
+                    <button className='lg:w-[215px] w-[100px] h-[48px] lg:text-[16px] text-[14px] border cursor-pointer border-[#197686] text-[#197686] rounded-xl'>Design File</button>
+                        </Link>
 
-                    <button className='lg:w-[215px] w-[100px] h-[48px] lg:text-[16px] text-[14px] border border-[#197686] text-[#197686] rounded-xl'>Design File</button>
-                    <button className='lg:w-[215px] w-[100px] h-[48px] lg:text-[16px] bg-[#197686] text-[14px] text-white rounded-xl'>GitHub Code</button>
+                    <Link to='https://github.com/braitcode/hng12-stage2-event-ticket-generator#:~:text=hng12%2Dstage2%2Devent%2Dticket%2Dgenerator.vercel.app'
+                    target='_blank'
+                    >
+                    <button className='lg:w-[215px] w-[100px] h-[48px] lg:text-[16px] bg-[#197686] text-[14px] text-white rounded-xl cursor-pointer'>GitHub Code</button>
+                    </Link>
                     </div>
                 </div>
             </div>

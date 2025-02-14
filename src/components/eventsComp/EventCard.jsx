@@ -123,8 +123,8 @@ const EventCard = () => {
                     </div>
                 </div>
             )}
-            <div className="w-full h-auto bg-[#052F35] flex justify-center items-center py-10">
-                <div className="lg:w-[45%] w-[95%] border border-[#197686] rounded-3xl p-6 flex flex-col gap-6">
+            <div className="w-full h-auto  flex justify-center items-center py-10">
+                <div className="xl:w-[45%] lg:w-[70%] w-[95%] border border-[#197686] rounded-3xl p-6 flex flex-col gap-6">
                     <div className="flex flex-col gap-4">
                         <span className='flex justify-between'>
                             <p className='text-white'>Ticket Selection</p>
@@ -135,7 +135,9 @@ const EventCard = () => {
                         </div>
                     </div>
                     <div className="bg-[#08252B] w-full lg:h-[726px] h-[1000px] flex flex-col items-center justify-center gap-6 rounded-xl border border-[#2BA4B9]">
-                        <div className="lg:w-[556px] w-[90%] h-[200px] border border-[#07373F] text-white flex flex-col justify-center items-center gap-4 rounded-xl">
+                        <div className="lg:w-[556px] w-[90%] h-[200px] border border-[#07373F] text-white flex flex-col justify-center items-center gap-4 rounded-xl" style={{
+                            background: 'linear-gradient(to bottom right, #0D3A42, #082328)'
+                        }}>
                             <h1 className='header h-[62px] lg:text-[62px] text-[40px]'>Techember Fest "25</h1>
                             <p className='lg:w-[340px] h-[48px] text-center lg:text-[16px] text-[12px]'>Join us for an unforgettable experience at Techember Fest '25! Secure your spot now.</p>
                             <p className='h-[24px] lg:text-[16px] text-[12px] text-center'>📍 [Event Location] || March 15, 2025 | 7:00PM</p>

@@ -106,7 +106,6 @@ const EventCard = () => {
     };
     return (
         <>
-
             {showPaymentModal && (
                 <div className="fixed inset-0 flex justify-center items-center">
                     <div className="bg-[#08252B] border border-[#2BA4B9] p-6 rounded-lg shadow-lg w-[400px] text-center">
@@ -140,7 +139,7 @@ const EventCard = () => {
                         }}>
                             <h1 className='header h-[62px] lg:text-[62px] text-[40px]'>Techember Fest "25</h1>
                             <p className='lg:w-[340px] h-[48px] text-center lg:text-[16px] text-[12px]'>Join us for an unforgettable experience at Techember Fest '25! Secure your spot now.</p>
-                            <p className='h-[24px] lg:text-[16px] text-[12px] text-center'>📍 [Event Location] || March 15, 2025 | 7:00PM</p>
+                            <p className='h-[24px] lg:text-[16px] text-[12px] text-center'>📍 4, Rumens Road, Ikoyi, Lagos || March 15, 2025 | 7:00PM</p>
                         </div>
                         <div className="bg-[#07373F] h-[4px] lg:w-[556px] w-[90%]"></div>
                         <div className="lg:h-[218px] lg:w-[556px] w-[90%] flex flex-col justify-between">

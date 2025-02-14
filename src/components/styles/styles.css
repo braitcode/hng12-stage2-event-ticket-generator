@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Road+Rage&display=swap');
+@import url(https://db.onlinewebfonts.com/c/1a5c2d8bbd4e28d99a6efcbb9a5b378f?family=JejuMyeongjo);
+
+.header {
+    font-family: "Road Rage", serif;
+    font-weight: 400;
+    font-style: normal;
+    /* font-size: 62px; */
+}
+
+.body-text{
+    font-family: "Jeju Myeongjo", serif;
+    font-weight: 400;
+    font-style: normal;
+    /* font-size: 16px; */
+}

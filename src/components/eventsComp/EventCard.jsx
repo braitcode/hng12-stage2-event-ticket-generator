@@ -90,8 +90,8 @@ const EventCard = () => {
         const { error } = await stripe.redirectToCheckout({
             lineItems: [{ price: priceId, quantity: ticketQuantity }],
             mode: "payment",
-            successUrl: "http://localhost:5173/ticket",
-            cancelUrl: "http://localhost:5173/"
+            successUrl: "https://hng12-stage2-event-ticket-generator.vercel.app/ticket",
+            cancelUrl: "https://hng12-stage2-event-ticket-generator.vercel.app/"
         });
 
         if (error) console.error("Stripe Checkout Error:", error);
@@ -138,8 +138,8 @@ const EventCard = () => {
                             background: 'linear-gradient(to bottom right, #0D3A42, #082328)'
                         }}>
                             <h1 className='header h-[62px] lg:text-[62px] text-[40px]'>Techember Fest "25</h1>
-                            <p className='lg:w-[340px] h-[48px] text-center lg:text-[16px] text-[12px]'>Join us for an unforgettable experience at Techember Fest '25! Secure your spot now.</p>
-                            <p className='h-[24px] lg:text-[16px] text-[12px] text-center'>📍 4, Rumens Road, Ikoyi, Lagos || March 15, 2025 | 7:00PM</p>
+                            <p className='lg:w-[340px] h-[48px] text-center lg:text-[16px] text-[12px]'>Join us for an unforgettable experience at [Event Name]! Secure your spot now.</p>
+                            <p className='h-[24px] lg:text-[16px] text-[12px] text-center'>📍 [Event Location] || March 15, 2025 | 7:00PM</p>
                         </div>
                         <div className="bg-[#07373F] h-[4px] lg:w-[556px] w-[90%]"></div>
                         <div className="lg:h-[218px] lg:w-[556px] w-[90%] flex flex-col justify-between">
@@ -162,7 +162,7 @@ const EventCard = () => {
                                         onClick={() => handleTicketSelection("VIP", "$50")}
                                     >
                                         <p className=" text-white font-semibold text-[24px]">
-                                            $50
+                                            $150
                                         </p>
                                         <span>
                                             <p className="text-white mt-2">VIP ACCESS</p>

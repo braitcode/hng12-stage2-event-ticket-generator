@@ -11,7 +11,7 @@ const EventCard = () => {
     const [showPaymentModal, setShowPaymentModal] = useState(false);
 
     const stripePromise = loadStripe("pk_test_51QsKyyPDSkXjoayWLz3UwPmOY9qL8YPjLhCgzNflQrtOtFNnLyXRaoahNj8XYl9dTHj1KS4P9Jmvk3YGFKJVxqhZ00p5xHbwW6");
-
+    
     // Load saved selection from localStorage on component mount
     useEffect(() => {
         const savedTicket = JSON.parse(localStorage.getItem("selectedTicket"));
@@ -65,37 +65,43 @@ const EventCard = () => {
         });
     };
 
-    // Stripe for International Users
     const handleStripePayment = async () => {
         if (!selectedTicket || !selectedTicket.price) {
             alert("Please select a ticket first.");
             return;
         }
-
+    
         const stripe = await stripePromise;
-
-        // Use real Stripe Price IDs
+    
         const stripePriceIds = {
-            "VIP": "price_1QsL7sPDSkXjoayWQDiEhhbY",   // Replace with actual Price ID for VIP ticket
-            "VVIP": "price_1QsL9lPDSkXjoayW2keVfvJa"   // Replace with actual Price ID for VVIP ticket
+            "VIP": "price_1Qsj97PDSkXjoayW2bn7kfqs",
+            "VVIP": "price_1QsL9lPDSkXjoayW2keVfvJa"  
         };
-
-        const priceId = stripePriceIds[selectedTicket.type]; // Get corresponding price ID
-
+    
+        const priceId = stripePriceIds[selectedTicket.type]; 
+    
         if (!priceId) {
             alert("Invalid ticket selection.");
             return;
         }
-
+    
+        // ✅ Convert ticketQuantity to a valid number
+        const quantity = parseInt(ticketQuantity, 10); 
+        if (isNaN(quantity) || quantity <= 0) {
+            alert("Invalid ticket quantity. Please enter a valid number.");
+            return;
+        }
+    
         const { error } = await stripe.redirectToCheckout({
-            lineItems: [{ price: priceId, quantity: ticketQuantity }],
+            lineItems: [{ price: priceId, quantity: quantity }], 
             mode: "payment",
             successUrl: "https://hng12-stage2-event-ticket-generator.vercel.app/ticket",
             cancelUrl: "https://hng12-stage2-event-ticket-generator.vercel.app/"
         });
-
+    
         if (error) console.error("Stripe Checkout Error:", error);
     };
+    
 
 
     // Handle quantity selection
@@ -159,7 +165,7 @@ const EventCard = () => {
                                     </div>
                                     <div className={`lg:w-[158px] w-[255px] h-[110px] p-2 rounded-xl cursor-pointer ${selectedTicket?.type === "VIP" ? "bg-[#197686]" : "border border-[#07373F]"
                                         }`}
-                                        onClick={() => handleTicketSelection("VIP", "$50")}
+                                        onClick={() => handleTicketSelection("VIP", "$150")}
                                     >
                                         <p className=" text-white font-semibold text-[24px]">
                                             $150
